@@ -6,16 +6,15 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-	static String[][] database = new String[100][4];
-	public static String string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*?-_+=~`<>,./ ";
+	static String[][] database = new String[100][4];    //This is the array that stores the info until quit
+	public static String string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*?-_+=~`<>,./ ";    //set string for the alphabet for encryption
 	public static char[] alphabet = string.toCharArray();
-	public static Scanner scanner = new Scanner(System.in);
-	static File f = new File("savefile.txt");
-	//static URL loc = Main.class.getClassLoader().getResource("savefile.txt");
-	public static String path = f.getAbsolutePath();
-	public static char[] password;
-	
-	public static void addAccount() {
+	public static Scanner scanner = new Scanner(System.in);	//Scanner for reading user input
+	static File f = new File("savefile.txt");   //make the file object
+	public static String path = f.getAbsolutePath();    //get file path (for use on different machines)
+	public static char[] password;  //create password "string"
+
+	public static void addAccount() { // the method for adding accounts
 		
 		String[] toAdd = new String[3];
 		System.out.println("Enter your application name: ");
@@ -35,7 +34,7 @@ public class Main {
 		}
 		
 	}
-	public static void search() {
+	public static void search() { // the method for searching
 		String search;
 		boolean found = false;
 		System.out.println("Type in the name of the application you wish to search for:");
@@ -54,13 +53,15 @@ public class Main {
 		}
 	}
 	
-	public static void delete() {
-		String search = null;
+	public static void delete() { //the method for deleting entries
+		String search;
+		boolean found = false;
 		System.out.println("Type in the name of the application you wish to delete:");
 		search = scanner.nextLine();
 		for (int i = 0; i < database.length; i++) {
 			if (database[i][0] != null && database[i][0].equals(search)) {
 				System.out.println("Your account was found!");
+				found = true;
 				System.out.println("The username is: " + database[i][1]);
 				System.out.println("The password is: " + database[i][2]);
 				System.out.println("Are you sure that you want to delete this account? (y/n)");
@@ -72,15 +73,18 @@ public class Main {
 					System.out.println("Delete Stopped!");
 					break;
 				}
-				System.out.println("Delete Sucessful!");
+				System.out.println("Delete Successful!");
 				break;
 			}
 		}
+		if (!found) {
+		    System.out.println("The account you searched for was not found.");
+        }
 	}
 	
 
-	public static void update() {
-		String search = null;
+	public static void update() { //the method for updating entries
+		String search;
 		System.out.println("Type in the name of the application you wish to update:");
 		search = scanner.nextLine();
 		for (int i = 0; i < database.length; i++) {
@@ -97,8 +101,20 @@ public class Main {
 		}
 	}
 	
-	public static void write(String[] toAdd) throws IOException {
-		
+	public static void write() throws IOException {
+        FileWriter file = new FileWriter(path);
+        BufferedWriter writer = new BufferedWriter(file);
+        writer.write("");
+        for (int i = 0; i < database.length; i++) {
+            if (database[i][0] != null) {
+                //caesarEncrypt();
+                writer.append(caesarEncrypt(password, database[i][0].toCharArray()) + "\n");
+                writer.append(caesarEncrypt(password, database[i][1].toCharArray()) + "\n");
+                writer.append(caesarEncrypt(password, database[i][2].toCharArray()) + "\n");
+            }
+        }
+        writer.close();
+        file.close();
 	}
 	
 	public static int getIndex(char c) {
@@ -202,20 +218,8 @@ public class Main {
 			}
 			
 		} 
-		FileWriter file = new FileWriter(path);
-		BufferedWriter writer = new BufferedWriter(file);
-		writer.write("");
-		for (int i = 0; i < database.length; i++) {
-			if (database[i][0] != null) {
-				//caesarEncrypt();
-				writer.append(caesarEncrypt(password, database[i][0].toCharArray()) + "\n");
-				writer.append(caesarEncrypt(password, database[i][1].toCharArray()) + "\n");
-				writer.append(caesarEncrypt(password, database[i][2].toCharArray()) + "\n");
-			}
-		}
-		writer.close();
-		file.close();
-		
+
+		write();
 
 	}
 }
