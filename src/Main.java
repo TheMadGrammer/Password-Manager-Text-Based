@@ -81,7 +81,7 @@ public class Main {
 		    System.out.println("The account you searched for was not found.");
         }
 	}
-	
+
 
 	public static void update() { //the method for updating entries
 		String search;
@@ -118,7 +118,7 @@ public class Main {
 	}
 	
 	public static int getIndex(char c) {
-		boolean found = false;
+		boolean found;
 		int i = 0;
 		while (true) {
 			if (c == alphabet[i]) {
@@ -127,7 +127,7 @@ public class Main {
 			}
 			i++;
 		}
-		if (found == true) {
+		if (found) {
 			return i;
 		} else {
 			return 0;
